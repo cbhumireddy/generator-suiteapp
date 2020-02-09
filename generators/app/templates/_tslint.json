@@ -1,0 +1,28 @@
+{
+  "extends": [
+    "tslint:latest"
+  ],
+  "linterOptions": {
+    "exclude": [
+      "test/jasmine/**/*",
+      "test/uitest2/**/*",
+      "src/lib/vendor/**/*"
+    ]
+  },
+  "jsRules": {},
+  "rules": {
+    "no-implicit-dependencies": false,
+    "no-submodule-imports": false,
+    "object-literal-sort-keys": false,
+    "no-console": false,
+    "linebreak-style": [
+      true,
+      "LF"
+    ],
+    "ordered-imports": false,
+    "quotemark": false,
+    "curly": false,
+    "max-line-length": false
+  },
+  "rulesDirectory": []
+}

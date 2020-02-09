@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "baseUrl": ".",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "importHelpers": false,
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "module": "es6",
+    "moduleResolution": "node",
+    "newLine": "LF",
+    "noEmitOnError": true,
+    "outDir": "FileCabinet/SuiteApps/<%= projectname %>/dist/compiled",
+    "paths": {
+      "N": [
+        "node_modules/@hitc/netsuite-types/N"
+      ],
+      "N/*": [
+        "node_modules/@hitc/netsuite-types/N/*"
+      ]
+    },
+    "preserveConstEnums": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es5"
+  },
+  "exclude": [
+    "build/*",
+    "test/**/*"
+  ],
+  "include": [
+    "src/**/*"
+  ]
+}

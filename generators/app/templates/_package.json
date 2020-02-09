@@ -1,0 +1,19 @@
+{
+  "name": "<%= projectname %>",
+  "version": "<%= projectversion %>",
+  "description": "",
+  "scripts": {    
+    "build:dev": "tsc -w",
+    "clean": "rimraf FileCabinet",
+    "test": "karma start  --browsers ChromeHeadless",
+    "test-ci": "karma start --reporters teamcity,coverage --single-run --browsers ChromeHeadlessNoSandbox --colors false"
+  },
+  "author": "<%= author %>",
+  "license": "ISC",
+  "devDependencies": {
+    "@hitc/netsuite-types": "^2019.2.5",    
+    "rimraf": "^2.6.3",
+    "tslint": "5.18.0",
+    "typescript": "^3.7.2"
+  }
+}

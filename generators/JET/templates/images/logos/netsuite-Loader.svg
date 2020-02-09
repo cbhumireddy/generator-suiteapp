@@ -1,0 +1,4 @@
+<svg  viewBox="-18 -18 36 36" role="img" aria-label="Loading" class="ns-portlet-loader__icon--circular">
+    <circle fill="none" r="16" class="ns-portlet-loader__icon--circular__outline"></circle>
+    <circle fill="none" r="16" class="ns-portlet-loader__icon--circular__runner" transform="rotate(-135)" stroke-dasharray="100"></circle>
+</svg>

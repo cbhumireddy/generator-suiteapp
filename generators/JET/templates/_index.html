@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<!--
+ Copyright (c) 2014, 2019, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+
+<!-- ************************ IMPORTANT INFORMATION ************************************
+  This web basic template is provided as an example of how to configure
+  a JET web application.  It contains the Oracle JET framework and a default
+  requireJS configuration file to show how JET can be setup in a common application.
+  This project template can be used in conjunction with demo code from the JET
+  website to test JET component behavior and interactions.
+
+  Any CSS styling with the prefix "demo-" is for demonstration only and is not
+  provided as part of the JET framework.
+
+  Please see the demos under Cookbook/Patterns/App Shell: Web and the CSS documentation
+  under Support/API Docs/Non-Component Styling on the JET website for more information on how to use 
+  the best practice patterns shown in this template.
+
+  Aria Landmark role attributes are added to the different sections of the application
+  for accessibility compliance. If you change the type of content for a specific
+  section from what is defined, you should also change the role value for that
+  section to represent the appropriate content type.
+  ***************************** IMPORTANT INFORMATION ************************************ -->
+<html lang="en-us">
+<head>
+    <title>Oracle JET Starter Template - Web Basic</title>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="netsuite/pagestyles.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/2344002951.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/1112422125.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/720962082.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/2007714384.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/1980038069.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/441208107.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/3992763334.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/ext-all-notheme.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/xtheme-gray.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/ext-override.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/htmleditorplugins.css" />
+    <link rel="stylesheet" type="text/css" href="netsuite/xtheme-reskin.css" />
+</head>
+<body style="display: block;">
+<div id="ns_header">
+    <div id="devpgloadtime" class="ns-logo">
+        <img src="/images/logos/netsuite-oracle.svg" alt="" />
+    </div>
+
+    <div class="ns-divider">
+        <div class="ns-transparent"></div>
+    </div>
+
+    <div class="ns-search" role="search">
+        <label for="_searchstring" class="uir-accessibility-hidden">Search</label>
+        <input
+                aria-autocomplete="list"
+                id="_searchstring"
+                type="text"
+                role="textbox"
+                placeholder="Search"
+                data-search-suggest="true"
+                value=""
+        />
+        <input
+                id="_searchSubmitter"
+                type="button"
+                value="Search"
+                onclick="globalSearch(NS.jQuery('#_searchstring').val())"
+                style="display:none"
+        />
+    </div>
+    <div class="ns-divider">
+        <div class="ns-transparent"></div>
+    </div>
+    <div
+            id="ns-header-quick-menu"
+            class="ns-quick-menu ns-menubar"
+            role="menubar"
+            tabindex="0"
+    >
+        <div
+                class="ns-submenu ns-menuitem ns-header"
+                role="menuitem"
+                id="ns-header-quick-menu-item0"
+                aria-haspopup="true"
+        >
+            <a class="ns-icon" aria-haspopup="true" tabindex="-1"
+            ><span class="uir-accessibility-hidden">Create New</span></a
+            >
+        </div>
+    </div>
+    <div class="ns-divider">
+        <div></div>
+    </div>
+    <div class="ns-header-item-container">
+        <a class="ns-help">
+            <div class="ns-icon"></div>
+            <div>Help</div>
+        </a>
+    </div>
+
+    <div class="ns-header-feedback ns-header-item-container">
+        <a
+                class="ns-help ns-header__feedback-button"
+                tabindex="0"
+                data-config='{"popupTimeout":"2000","ratingOptions":[{"id":"1","text":"Very Unsatisfied"},{"id":"2","text":"Unsatisfied"},{"id":"3","text":"Satisfied"},{"id":"4","text":"Very Satisfied"}],"backendUrl":"/app/ui/feedback/sendfeedback.nl","label":"Feedback"}'
+        >
+            <div class="ns-icon"></div>
+            <div>Feedback</div>
+        </a>
+    </div>
+
+    <div
+            id="ns-header-menu-userrole"
+            class="ns-user ns-menubar"
+            role="menubar"
+            tabindex="0"
+    >
+        <div
+                id="spn_cRR_d1"
+                class="ns-menuitem ns-submenu ns-header"
+                role="menuitem"
+                aria-haspopup="true"
+        >
+            <a href="/app/center/myroles.nl" aria-haspopup="true" tabindex="-1">
+                <div class="ns-icon">
+                    <span class="uir-accessibility-hidden">Change Role</span>
+                </div>
+                <div class="ns-role">
+                    <span>Sumeet Kishore</span>
+                    <span>
+                                <span class="ns-role-company">(SS2.05DAY) SuiteScript</span> -
+                                <span class="ns-role-name">Administrator</span>
+                            </span>
+                </div>
+            </a>
+
+            <ul class="ns-menu" role="menu" aria-expanded="false" aria-hidden="true">
+                <li
+                        class="ns-menuitem uir-menuitem-signout"
+                        role="menuitem"
+                        id="ns-header-menu-userrole-item0"
+                        style="min-width: 305px;"
+                >
+                    <a href="/pages/nllogoutnoback.jsp" tabindex="-1">
+                        <span>Log Out</span><span class="icon-signout">&nbsp;</span>
+                    </a>
+                </li>
+
+                <li
+                        class="ns-menuitem uir-menuitem-viewall"
+                        role="menuitem"
+                        id="ns-header-menu-userrole-item1"
+                        style="min-width: 305px;"
+                >
+                    <a href="/app/center/myroles.nl" tabindex="-1">
+                        <span>View All Roles</span>
+                    </a>
+                </li>
+
+                <li
+                        class="ns-menuitem ns-role-menuitem"
+                        role="menuitem"
+                        id="ns-header-menu-userrole-item2"
+                        style="min-width: 305px;"
+                >
+                    <a href="/app/login/secure/changerole.nl?id=249068139" tabindex="-1">
+                                <span class="ns-role-menuitem-text"
+                                >(SS2.05DAY) SuiteScript - Administrator</span
+                                >
+                    </a>
+                </li>
+                <li
+                        class="ns-menuitem ns-role-menuitem"
+                        role="menuitem"
+                        id="ns-header-menu-userrole-item3"
+                        style="min-width: 305px;"
+                >
+                    <a href="/app/login/secure/changerole.nl?id=249366187" tabindex="-1">
+                                <span class="ns-role-menuitem-text"
+                                >DEV PSG - 5728792 - PSG: Route Delivery - Administrator</span
+                                >
+                    </a>
+                </li>
+                <li
+                        class="ns-menuitem ns-role-menuitem"
+                        role="menuitem"
+                        id="ns-header-menu-userrole-item4"
+                        style="min-width: 305px;"
+                >
+                    <a href="/app/login/secure/changerole.nl?id=248944485" tabindex="-1">
+                                <span class="ns-role-menuitem-text"
+                                >Essentials - Administrator</span
+                                >
+                    </a>
+                </li>
+                <li
+                        class="ns-menuitem ns-role-menuitem"
+                        role="menuitem"
+                        id="ns-header-menu-userrole-item5"
+                        style="min-width: 305px;"
+                >
+                    <a href="/app/login/secure/changerole.nl?id=248682601" tabindex="-1">
+                                <span class="ns-role-menuitem-text"
+                                >NetSuite Inc. - Employee Center</span
+                                >
+                    </a>
+                </li>
+                <li
+                        class="ns-menuitem ns-role-menuitem"
+                        role="menuitem"
+                        id="ns-header-menu-userrole-item6"
+                        style="min-width: 305px;"
+                >
+                    <a href="/app/login/secure/changerole.nl?id=248682602" tabindex="-1">
+                                <span class="ns-role-menuitem-text"
+                                >NetSuite Inc. - ENG Engineer</span
+                                >
+                    </a>
+                </li>
+                <li
+                        class="ns-menuitem ns-role-menuitem"
+                        role="menuitem"
+                        id="ns-header-menu-userrole-item7"
+                        style="min-width: 305px;"
+                >
+                    <a href="/app/login/secure/changerole.nl?id=249339913" tabindex="-1">
+                                <span class="ns-role-menuitem-text"
+                                >Route_Management_9017_Sumeet - Administrator</span
+                                >
+                    </a>
+                </li>
+                <li
+                        class="ns-menuitem ns-role-menuitem"
+                        role="menuitem"
+                        id="ns-header-menu-userrole-item8"
+                        style="min-width: 305px;"
+                >
+                    <a href="/app/login/secure/changerole.nl?id=249339931" tabindex="-1">
+                                <span class="ns-role-menuitem-text"
+                                >Route_Management_9017_Sumeet_SDF - Administrator</span
+                                >
+                    </a>
+                </li>
+                <li
+                        class="ns-menuitem ns-role-menuitem"
+                        role="menuitem"
+                        id="ns-header-menu-userrole-item9"
+                        style="min-width: 305px;"
+                >
+                    <a href="/app/login/secure/changerole.nl?id=249564256" tabindex="-1">
+                                <span class="ns-role-menuitem-text"
+                                >Route_Mgmt_PSG_QA_9014_Common - Administrator</span
+                                >
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="ns_navigation" style="height: 38px;" role="navigation">
+    <ul
+            id="ns-header-menu-recent"
+            class="ns-menu uir-menu-recent ns-menubar"
+            role="menubar"
+            tabindex="0"
+    >
+        <li
+                class="ns-menuitem ns-submenu ns-header"
+                role="menuitem"
+                id="ns-header-menu-recent-item0"
+                aria-haspopup="true"
+        >
+            <a
+                    id="recent-records-menu-item"
+                    href="/app/common/custom/custreccustfield.nl?id=512&amp;whence="
+                    class="ns-menu-icon"
+                    tabindex="-1"
+                    aria-label="Customer (Product Preference Field)"
+            >
+                <img src="images/logos/netsuite-recent.svg" />
+            </a>
+        </li>
+    </ul>
+    <ul
+            id="ns-header-menu-shortcuts"
+            class="ns-menu uir-menu-shortcuts ns-menubar"
+            role="menubar"
+            tabindex="0"
+    >
+        <li
+                class="ns-menuitem ns-submenu ns-header"
+                role="menuitem"
+                id="ns-header-menu-shortcuts-item0"
+                aria-haspopup="true"
+        >
+            <a
+                    href="javascript:redirectToStickyPage('','OTHERCARD',false);void(0);"
+                    class="ns-menu-icon"
+                    tabindex="-1"
+                    aria-label="Add To Shortcuts"
+            >
+                <img src="images/logos/netsuite-star.svg" />
+            </a>
+            <ul class="ns-menu" aria-expanded="false" aria-hidden="true">
+                <li
+                        class="ns-menuitem ns-shortcut-1"
+                        role="menuitem"
+                        id="ns-header-menu-shortcuts-item2"
+                        style="min-width: 50px;"
+                >
+                    <a href="/app/setup/rolelist.nl?whence=" tabindex="-1"
+                    ><span>Manage Roles</span></a
+                    >
+                </li>
+                <li
+                        class="ns-menuitem ns-shortcut-2"
+                        role="menuitem"
+                        id="ns-header-menu-shortcuts-item3"
+                        style="min-width: 50px;"
+                >
+                    <a href="/app/common/custom/entitycustfields.nl?whence=" tabindex="-1"
+                    ><span>Customize Entity Fields</span></a
+                    >
+                </li>
+                <li
+                        class="ns-menuitem ns-shortcut-3"
+                        role="menuitem"
+                        id="ns-header-menu-shortcuts-item4"
+                        style="min-width: 50px;"
+                >
+                    <a href="/app/common/custom/bodycustfields.nl?whence=" tabindex="-1"
+                    ><span>Customize Transaction Fields</span></a
+                    >
+                </li>
+                <li
+                        class="ns-menuitem ns-shortcut-4"
+                        role="menuitem"
+                        id="ns-header-menu-shortcuts-item5"
+                        style="min-width: 50px;"
+                >
+                    <a href="/app/common/custom/custlists.nl?whence=" tabindex="-1"
+                    ><span>Customize Custom Drop-Down Lists</span></a
+                    >
+                </li>
+                <li
+                        class="ns-menuitem ns-shortcut-5"
+                        role="menuitem"
+                        id="ns-header-menu-shortcuts-item6"
+                        style="min-width: 50px;"
+                >
+                    <a
+                            href="/app/accounting/transactions/jobcreationmanager.nl?whence="
+                            tabindex="-1"
+                    ><span>Create Projects from Orders</span></a
+                    >
+                </li>
+                <li
+                        class="ns-menuitem ns-shortcut-6"
+                        role="menuitem"
+                        id="ns-header-menu-shortcuts-item7"
+                        style="min-width: 50px;"
+                >
+                    <a
+                            href="/app/reporting/reportrunner.nl?cr=351&amp;reload=T&amp;whence="
+                            tabindex="-1"
+                    ><span>Consolidated Balance Sheet</span></a
+                    >
+                </li>
+                <li
+                        class="ns-menuitem ns-shortcut-7"
+                        role="menuitem"
+                        id="ns-header-menu-shortcuts-item8"
+                        style="min-width: 50px;"
+                >
+                    <a href="/app/common/item/item.nl?whence=" tabindex="-1"
+                    ><span>Create New Item</span></a
+                    >
+                </li>
+                <li
+                        class="ns-menuitem ns-shortcut-8"
+                        role="menuitem"
+                        id="ns-header-menu-shortcuts-item9"
+                        style="min-width: 50px;"
+                >
+                    <a
+                            href="/app/reporting/reportrunner.nl?cr=147&amp;whence="
+                            tabindex="-1"
+                    ><span>Forecast vs. Quota</span></a
+                    >
+                </li>
+                <li
+                        class="ns-menuitem ns-shortcut-9"
+                        role="menuitem"
+                        id="ns-header-menu-shortcuts-item10"
+                        style="min-width: 50px;"
+                >
+                    <a
+                            href="http://shopping.netsuite.com/s.nl?c=TSTDRV376260&amp;n=1"
+                            target="_blank"
+                            tabindex="-1"
+                    ><span>Launch Website</span></a
+                    >
+                </li>
+                <li
+                        class="ns-menuitem ns-shortcut-10"
+                        role="menuitem"
+                        id="ns-header-menu-shortcuts-item11"
+                        style="min-width: 50px;"
+                >
+                    <a
+                            href="/app/center/setup/shortcuts.nl?sc=-29&amp;sectionid=-29&amp;whence="
+                            tabindex="-1"
+                    ><span>Set Up Shortcuts</span></a
+                    >
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <ul
+            id="ns-header-menu-home"
+            class="ns-menu uir-menu-home ns-menubar"
+            role="menubar"
+            tabindex="0"
+    >
+        <li
+                class="ns-menuitem ns-submenu ns-menuitem-selected ns-header"
+                role="menuitem"
+                id="ns-header-menu-home-item0"
+                aria-haspopup="true"
+        >
+            <a
+                    href="/app/center/card.nl?sc=-29&amp;whence="
+                    class="ns-menu-icon ns-menu-icon__home"
+                    tabindex="-1"
+                    aria-label="Dashboard"
+            >
+                <img src="images/logos/netsuite-Home.svg" />
+            </a>
+            <ul class="ns-menu" aria-expanded="false" aria-hidden="true">
+                <li
+                        class="ns-menuitem  ns-menuseparator"
+                        role="menuitem"
+                        id="ns-header-menu-home-item1"
+                        style="min-width: 50px;"
+                >
+                    <a href="/app/center/card.nl?sc=-29&amp;whence=" tabindex="-1"
+                    ><span>Dashboard</span></a
+                    >
+                </li>
+                <li
+                        class="ns-menuitem "
+                        role="menuitem"
+                        id="ns-header-menu-home-item2"
+                        style="min-width: 50px;"
+                >
+                    <a href="/app/center/userprefs.nl?sc=-29&amp;whence=" tabindex="-1"
+                    ><span>Set Preferences</span></a
+                    >
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul
+            id="ns-header-menu-main"
+            class="ns-menu uir-menu-main ns-menubar"
+            role="menubar"
+            tabindex="0"
+    >
+        <li
+                data-title="Activities"
+                class="ns-header ns-menuitem ns-submenu"
+                role="menuitem"
+                id="ns-header-menu-main-item0"
+                aria-haspopup="true"
+        >
+            <a href="/app/center/card.nl?sc=-62&amp;whence=" tabindex="-1">
+                <span>Activities</span>
+            </a>
+            <ul
+                    class="ns-menu"
+                    role="menu"
+                    aria-hidden="true"
+                    aria-expanded="false"
+                    style="top: 90px; left: 175px; width: 138.016px;"
+            >
+                <li
+                        data-title="Activities Overview"
+                        class="ns-menuitem ns-menuseparator "
+                        role="menuitem"
+                        id="ns-header-menu-main-item47"
+                >
+                    <a
+                            href="/app/center/card.nl?sc=-62&amp;whence=&amp;whence="
+                            tabindex="-1"
+                    ><span>Activities Overview</span></a
+                    >
+                </li>
+                <li
+                        data-title="Scheduling"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item48"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Scheduling</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Setup"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item49"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Setup</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+            </ul>
+        </li>
+        <li
+                data-title="Transactions"
+                class="ns-header ns-menuitem ns-submenu"
+                role="menuitem"
+                id="ns-header-menu-main-item1"
+                aria-haspopup="true"
+        >
+            <a href="/app/center/card.nl?sc=-7&amp;whence=" tabindex="-1">
+                <span>Transactions</span>
+            </a>
+            <ul
+                    class="ns-menu"
+                    role="menu"
+                    aria-hidden="true"
+                    aria-expanded="false"
+                    style="top: 90px; left: 256.031px; width: 163.609px;"
+            >
+                <li
+                        data-title="Transactions Overview"
+                        class="ns-menuitem ns-menuseparator"
+                        role="menuitem"
+                        id="ns-header-menu-main-item35"
+                >
+                    <a
+                            href="/app/center/card.nl?sc=-7&amp;whence=&amp;whence="
+                            tabindex="-1"
+                    ><span>Transactions Overview</span></a
+                    >
+                </li>
+                <li
+                        data-title="Bank"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item36"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Bank</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                    <ul
+                            class="ns-menu"
+                            role="menu"
+                            aria-hidden="true"
+                            aria-expanded="false"
+                    >
+                        <li
+                                data-title="Write Checks"
+                                class="ns-menuitem ns-submenu"
+                                role="menuitem"
+                                id="ns-header-menu-main-item50"
+                                aria-haspopup="true"
+                        >
+                            <a
+                                    href="/app/accounting/transactions/check.nl?whence="
+                                    tabindex="-1"
+                            ><span>Write Checks</span></a
+                            ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                        </li>
+                        <li
+                                data-title="Make Deposits"
+                                class="ns-menuitem ns-submenu"
+                                role="menuitem"
+                                id="ns-header-menu-main-item51"
+                                aria-haspopup="true"
+                        >
+                            <a
+                                    href="/app/accounting/transactions/deposit.nl?whence="
+                                    tabindex="-1"
+                            ><span>Make Deposits</span></a
+                            ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                        </li>
+                        <li
+                                data-title="Transfer Funds"
+                                class="ns-menuitem ns-submenu"
+                                role="menuitem"
+                                id="ns-header-menu-main-item52"
+                                aria-haspopup="true"
+                        >
+                            <a
+                                    href="/app/accounting/transactions/transfer.nl?whence="
+                                    tabindex="-1"
+                            ><span>Transfer Funds</span></a
+                            ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                        </li>
+                        <li
+                                data-title="Use Credit Card"
+                                class="ns-menuitem ns-submenu"
+                                role="menuitem"
+                                id="ns-header-menu-main-item53"
+                                aria-haspopup="true"
+                        >
+                            <a
+                                    href="/app/accounting/transactions/cardchrg.nl?whence="
+                                    tabindex="-1"
+                            ><span>Use Credit Card</span></a
+                            ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                        </li>
+                        <li
+                                data-title="Reconcile Bank Statement"
+                                class="ns-menuitem "
+                                role="menuitem"
+                                id="ns-header-menu-main-item54"
+                        >
+                            <a
+                                    href="/app/accounting/transactions/reconcile.nl?whence="
+                                    tabindex="-1"
+                            ><span>Reconcile Bank Statement</span></a
+                            >
+                        </li>
+                        <li
+                                data-title="Reconcile Credit Card Statement"
+                                class="ns-menuitem "
+                                role="menuitem"
+                                id="ns-header-menu-main-item55"
+                        >
+                            <a
+                                    href="/app/accounting/transactions/reconcile.nl?page_type=cc&amp;whence="
+                                    tabindex="-1"
+                            ><span>Reconcile Credit Card Statement</span></a
+                            >
+                        </li>
+                        <li
+                                data-title="Import Online Banking Data"
+                                class="ns-menuitem ns-submenu"
+                                role="menuitem"
+                                id="ns-header-menu-main-item56"
+                                aria-haspopup="true"
+                        >
+                            <a href="/pages/setup/importolbform.jsp?whence=" tabindex="-1"
+                            ><span>Import Online Banking Data</span></a
+                            ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                        </li>
+                        <li
+                                data-title="Reconcile Account Statement"
+                                class="ns-menuitem ns-submenu"
+                                role="menuitem"
+                                id="ns-header-menu-main-item57"
+                                aria-haspopup="true"
+                        >
+                            <a href="/erp/bankrec/edit/bankrec.nl?whence=" tabindex="-1"
+                            ><span>Reconcile Account Statement</span></a
+                            ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                        </li>
+                        <li
+                                data-title="Confirm Transaction Matches"
+                                class="ns-menuitem ns-submenu"
+                                role="menuitem"
+                                id="ns-header-menu-main-item58"
+                                aria-haspopup="true"
+                        >
+                            <a
+                                    href="/erp/confirmbanktransactions/confirmbanktransactions.nl?whence="
+                                    tabindex="-1"
+                            ><span>Confirm Transaction Matches</span></a
+                            ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                        </li>
+                        <li
+                                data-title="Reconciliation Matching Rules"
+                                class="ns-menuitem "
+                                role="menuitem"
+                                id="ns-header-menu-main-item59"
+                        >
+                            <a
+                                    href="/app/matchingengine/matchingrules/matchingrules.nl?whence="
+                                    tabindex="-1"
+                            ><span>Reconciliation Matching Rules</span></a
+                            >
+                        </li>
+                        <li
+                                data-title="Process GST/HST Refund"
+                                class="ns-menuitem "
+                                role="menuitem"
+                                id="ns-header-menu-main-item60"
+                        >
+                            <a
+                                    href="/app/accounting/transactions/gstrefund.nl?whence="
+                                    tabindex="-1"
+                            ><span>Process GST/HST Refund</span></a
+                            >
+                        </li>
+                        <li
+                                data-title="Write Tax Liability"
+                                class="ns-menuitem ns-submenu"
+                                role="menuitem"
+                                id="ns-header-menu-main-item61"
+                                aria-haspopup="true"
+                        >
+                            <a
+                                    href="/app/accounting/transactions/vatliab.nl?whence="
+                                    tabindex="-1"
+                            ><span>Write Tax Liability</span></a
+                            ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                        </li>
+                        <li
+                                data-title="Pay Sales Tax"
+                                class="ns-menuitem ns-submenu"
+                                role="menuitem"
+                                id="ns-header-menu-main-item62"
+                                aria-haspopup="true"
+                        >
+                            <a
+                                    href="/app/accounting/transactions/taxpymt.nl?whence="
+                                    tabindex="-1"
+                            ><span>Pay Sales Tax</span></a
+                            ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                        </li>
+                    </ul>
+                </li>
+                <li
+                        data-title="Purchases"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item37"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Purchases</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Payables"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item38"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Payables</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Sales"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item39"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Sales</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Customers"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item40"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Customers</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Employees"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item41"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Employees</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Commissions"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item42"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Commissions</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Inventory"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item43"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Inventory</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Quota/Forecast"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item44"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Quota/Forecast</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Financial"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item45"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Financial</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Management"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item46"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Management</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+            </ul>
+        </li>
+        <li
+                data-title="Lists"
+                class="ns-header ns-menuitem ns-submenu"
+                role="menuitem"
+                id="ns-header-menu-main-item2"
+                aria-haspopup="true"
+        >
+            <a href="/app/center/card.nl?sc=-8&amp;whence=" tabindex="-1">
+                <span>Lists</span>
+            </a>
+        </li>
+        <li
+                data-title="Reports"
+                class="ns-header ns-menuitem ns-submenu"
+                role="menuitem"
+                id="ns-header-menu-main-item3"
+                aria-haspopup="true"
+        >
+            <a href="/app/center/card.nl?sc=-9&amp;whence=" tabindex="-1">
+                <span>Reports</span>
+            </a>
+            <ul class="ns-menu" role="menu" aria-hidden="true" aria-expanded="false">
+                <li
+                        data-title="Reports Overview"
+                        class="ns-menuitem ns-menuseparator "
+                        role="menuitem"
+                        id="ns-header-menu-main-item9"
+                >
+                    <a
+                            href="/app/center/card.nl?sc=-9&amp;whence=&amp;whence="
+                            tabindex="-1"
+                    ><span>Reports Overview</span></a
+                    >
+                </li>
+                <li
+                        data-title="New Report"
+                        class="ns-menuitem "
+                        role="menuitem"
+                        id="ns-header-menu-main-item10"
+                >
+                    <a href="/app/reporting/quickreports.nl?whence=" tabindex="-1"
+                    ><span>New Report</span></a
+                    >
+                </li>
+                <li
+                        data-title="New Financial Report"
+                        class="ns-menuitem "
+                        role="menuitem"
+                        id="ns-header-menu-main-item11"
+                >
+                    <a href="/app/reporting/newfinancialreport.nl?whence=" tabindex="-1"
+                    ><span>New Financial Report</span></a
+                    >
+                </li>
+                <li
+                        data-title="Recent Reports"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item12"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Recent Reports</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Saved Reports"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item13"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Saved Reports</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Scheduled Reports"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item14"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Scheduled Reports</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="New Search"
+                        class="ns-menuitem "
+                        role="menuitem"
+                        id="ns-header-menu-main-item15"
+                >
+                    <a href="/app/common/search/search.nl?whence=" tabindex="-1"
+                    ><span>New Search</span></a
+                    >
+                </li>
+                <li
+                        data-title="Saved Searches"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item16"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Saved Searches</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Scheduled Searches"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item17"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Scheduled Searches</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Financial"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item18"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Financial</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Revenue"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item19"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Revenue</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Banking/Budgeting"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item20"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Banking/Budgeting</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Employees/HR"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item21"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Employees/HR</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Projects"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item22"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Projects</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Time &amp; Billables"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item23"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Time &amp; Billables</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Purchases"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item24"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Purchases</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Vendors/Payables"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item25"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Vendors/Payables</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Inventory/Items"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item26"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Inventory/Items</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Order Management"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item27"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Order Management</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Customer/Receivables"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item28"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Customer/Receivables</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Commissions"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item29"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Commissions</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Sales"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item30"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Sales</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Orders"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item31"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Orders</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Forecast"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item32"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Forecast</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Cases"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item33"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Cases</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Marketing"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item34"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Marketing</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Pipeline Analysis"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item63"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Pipeline Analysis</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Web Presence"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item64"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Web Presence</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Integration"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item65"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Integration</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Sales Tax US"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item66"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Sales Tax US</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Sales Tax Canada"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item67"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Sales Tax Canada</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="VAT/GST"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item68"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>VAT/GST</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+            </ul>
+        </li>
+        <li
+                data-title="Analytics"
+                class="ns-header ns-menuitem"
+                role="menuitem"
+                id="ns-header-menu-main-item4"
+        >
+            <a href="/app/common/report/list.nl?sc=-160&amp;whence=" tabindex="-1">
+                <span>Analytics</span>
+            </a>
+        </li>
+        <li
+                data-title="Documents"
+                class="ns-header ns-menuitem ns-submenu"
+                role="menuitem"
+                id="ns-header-menu-main-item5"
+                aria-haspopup="true"
+        >
+            <a
+                    href="/app/common/media/mediaitemfolders.nl?sc=-63&amp;whence="
+                    tabindex="-1"
+            >
+                <span>Documents</span>
+            </a>
+        </li>
+        <li
+                data-title="Setup"
+                class="ns-header ns-menuitem ns-submenu"
+                role="menuitem"
+                id="ns-header-menu-main-item6"
+                aria-haspopup="true"
+        >
+            <a href="/app/setup/mainsetup.nl?sc=-10&amp;whence=" tabindex="-1">
+                <span>Setup</span>
+            </a>
+        </li>
+        <li
+                data-title="Customization"
+                class="ns-header ns-menuitem ns-submenu"
+                role="menuitem"
+                id="ns-header-menu-main-item7"
+                aria-haspopup="true"
+        >
+            <a href="/app/setup/mainsetup.nl?sc=-90&amp;whence=" tabindex="-1">
+                <span>Customization</span>
+            </a>
+            <ul class="ns-menu" role="menu" aria-hidden="true" aria-expanded="false">
+                <li
+                        data-title="Customization Manager"
+                        class="ns-menuitem ns-menuseparator "
+                        role="menuitem"
+                        id="ns-header-menu-main-item69"
+                >
+                    <a
+                            href="/app/setup/mainsetup.nl?sc=-90&amp;whence=&amp;whence="
+                            tabindex="-1"
+                    ><span>Customization Manager</span></a
+                    >
+                </li>
+                <li
+                        data-title="Lists, Records, &amp; Fields"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item70"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Lists, Records, &amp; Fields</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Forms"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item71"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Forms</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Scripting"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item72"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Scripting</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Workflow"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item73"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Workflow</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Plug-ins"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item74"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Plug-ins</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Centers and Tabs"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item75"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Centers and Tabs</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="SuiteBundler"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item76"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>SuiteBundler</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="Translations"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item77"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>Translations</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+                <li
+                        data-title="SuiteCloud Development"
+                        class="ns-menuitem ns-submenu"
+                        role="menuitem"
+                        id="ns-header-menu-main-item78"
+                        aria-haspopup="true"
+                >
+                    <a tabindex="-1"><span>SuiteCloud Development</span></a
+                    ><span class="ns-submenu-triangle" aria-hidden="true">►</span>
+                </li>
+            </ul>
+        </li>
+        <li
+                data-title="Support"
+                class="ns-header ns-menuitem ns-submenu"
+                role="menuitem"
+                id="ns-header-menu-main-item8"
+                aria-haspopup="true"
+        >
+            <a href="/app/center/card.nl?sc=-11&amp;whence=" tabindex="-1">
+                <span>Support</span>
+            </a>
+        </li>
+    </ul>
+    <ul
+            class="ns-menu ns-menu-overflow ns-menubar"
+            id="NS_MENU_ID0"
+            role="menubar"
+            tabindex="0"
+    >
+        <li
+                class="ns-menuitem ns-header ns-submenu"
+                role="menuitem"
+                id="NS_MENU_ID0-item0"
+                aria-haspopup="true"
+        >
+            <a href="#" title="More menus" tabindex="-1">…</a>
+            <ul class="ns-menu" aria-expanded="false" aria-hidden="true"></ul>
+        </li>
+    </ul>
+</div>
+<!-- <div id="header" style="width:100vw; height:28px">
+    <img src="images/logos/netsuite-oracle.svg" />
+</div>
+ -->
+<!-- <div style="height:38px; background-color:#607799; width: 100vw;" role="navigation">
+<ul class='header-items'>
+    <li class = 'ns-header ns-menuitem ns-submenu'><a href><img src="images/logos/netsuite-recent.svg"></a></li>
+    <li><a href><img src="images/logos/netsuite-star.svg"></a></li>
+    <li><a href><img src="images/logos/netsuite-home.svg"></a></li>
+    <li><a href="http://localhost:8000">Activities</a></li>
+    <li><a href="http://localhost:8000">Transaction</a></li>
+    <li><a href="http://localhost:8000">List</a></li>
+    <li><a href="http://localhost:8000">Reports</a></li>
+    <li><a href="http://localhost:8000">Analiytics</a></li>
+    <li><a href="http://localhost:8000">Documents</a></li>
+    <li><a href="http://localhost:8000">Setup</a></li>
+    <li><a href="http://localhost:8000">Customization</a></li>
+    <li><a href="http://localhost:8000">Support</a></li>
+</div> -->
+<h1 style="font-weight: bold; font-size: 22px; color: #4D5F79; margin:15px 5px 15px 5px;">
+    Custom Jet UI
+</h1>
+
+<div id="psgsssplitviewhold">
+    <!--
+ ** Oracle JET V7.0.1 web application header pattern.
+ ** Please see the demos under Cookbook/Patterns/App Shell: Web
+ ** and the CSS documentation under Support/API Docs/Non-Component Styling
+ ** on the JET website for more information on how to use this pattern.
+-->
+    <psgss-splitview
+            id="splitview"
+            right_header_item_1="[[right_header_item_1]]"
+            right_header_item_2="[[right_header_item_2]]"
+            right_header_item_3="[[right_header_item_3]]"
+            header_left_route_total="[[header_left_route_total]]"
+            right_header="[[right_header]]"
+            left_header="[[left_header]]"
+            on_right_drop="[[on_right_drop]]"
+            header_left_route_text="[[header_left_route_text]]"
+            right_header_text="[[headertext]]"
+            note_text="[[note_text]]"
+            routesdata="{{ routesData }}"
+            stopsdata="[[stopsData]]"
+            on-left-item-click="[[onleftitemclick]]"
+            on-stop-change="[[on_stop_change]]"
+            on-drop = "[[on_right_drop]]"
+            on-right-scroll = "[[scroll_right_end]]"
+            on-left-scroll = "[[scroll_left_end]]"
+
+    >
+    </psgss-splitview>
+</div>
+<script type="text/javascript" src="js/libs/require/require.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
