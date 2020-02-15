@@ -9,12 +9,12 @@ export class <%= usecasename %> {
             throw new Error('_errors.TRUCK_MR_GATEWAY_IS_REQUIRED');
     }
 
-    private dependencies: any;
-    private gateway: <%= gatewayname %>;
+    public dependencies: any;
+public gateway: <%= gatewayname %>;
 
-    constructor(options: any) {
-        this.dependencies = options.dependencies;
-        this.gateway =  options.dependencies['<%= gatewayname %>'];
-        <%= usecasename %>._throwErrorWhenInvalidParameter(options);
-    }
+constructor(options: any) {
+    this.dependencies = options.dependencies;
+    this.gateway =  options.dependencies['<%= gatewayname %>'];
+    <%= usecasename %>._throwErrorWhenInvalidParameter(options);
+}
 }

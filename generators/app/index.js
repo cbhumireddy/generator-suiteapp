@@ -21,10 +21,28 @@ module.exports = class extends Generator {
     const prompts = [
       {
         type: "input",
+        name: "publisherid",
+        message: "Enter publisher id?",
+        default: "com.netsuite"
+      },
+      {
+        type: "input",
+        name: "projectid",
+        message: "Enter project id?",
+        default: "bundlename"
+      },
+      {
+        type: "input",
         name: "projectname",
         message: "Would you like to root name to be called?",
-        default: "com.netsuite.bundlename"
+        default: "Sometestapplication"
       },
+      // {
+      //   type: "input",
+      //   name: "projectinitials",
+      //   message: "Enter Project initials that will be prefixed with scripts?",
+      //   default: "LT"
+      // },
       {
         type: "input",
         name: "projectversion",
@@ -47,6 +65,18 @@ module.exports = class extends Generator {
         type: "input",
         name: "usereventscript",
         message: "Do you want to include user event script. Enter Y/N",
+        default: "Y"
+      },
+      {
+        type: "input",
+        name: "suiteletscript",
+        message: "Do you want to include suitelet script. Enter Y/N",
+        default: "Y"
+      },
+      {
+        type: "input",
+        name: "mapreducerscript",
+        message: "Do you want to include map reducer script. Enter Y/N",
         default: "Y"
       },
       {
@@ -87,7 +117,7 @@ module.exports = class extends Generator {
     return this.prompt(prompts).then(props => {
       // To access props later use this.props.someAnswer;
       this.scripttype = props.scripttype;
-      this.name = props.projectname;
+      this.name = props.publisherid + '.' + props.projectid;
       this.projectname = props.projectname;
       this.autor = props.author;
       this.projectversion = props.projectversion;
@@ -95,34 +125,66 @@ module.exports = class extends Generator {
       this.ojetversion = props['ojet:version'],
       this.clientscriptneeded = props.clientscript === 'Y',
       this.usereventscriptneeded = props.usereventscript === 'Y',
+      this.suiteletscriptneeded = props.suiteletscript === 'Y',
+      this.mapreducerscriptneeded = props.mapreducerscript === 'Y',
       this.componentname = props.componentname,
-      this.includesimplepackage = props.simplepackage === 'Y'
+      this.includesimplepackage = props.simplepackage === 'Y',
+      this.publisherid = props.publisherid,
+      this.projectid = props.projectid,
+      this.scriptversion = props.scriptversion
+      //this.projectinitials = props.projectinitials
     });
   }
 
   default() {
     if (this.clientscriptneeded) {
       this.composeWith("suiteapp:client", {
-        name: this.name,
+        name: this.projectname,
         type: "ts",
         componentname: this.componentname,
-        scriptversion : this.scriptversion
+        scriptversion : this.scriptversion,
+        projectinitials : this.projectinitials,
+        suiteappfoldername: this.name
       });
     }
 
     if (this.usereventscriptneeded) {
       this.composeWith("suiteapp:userevent", {
-        name: this.name,
+        name: this.projectname,
         type: "ts",
         componentname: this.componentname,
-        scriptversion : this.scriptversion
+        scriptversion : this.scriptversion,
+        projectinitials: this.projectinitials,
+        suiteappfoldername : this.name
+      });
+    }
+
+    if (this.suiteletscriptneeded) {
+      this.composeWith("suiteapp:suitelet", {
+        name: this.projectname,
+        type: "ts",
+        componentname: this.componentname,
+        scriptversion : this.scriptversion,
+        projectinitials: this.projectinitials,
+        suiteappfoldername : this.name
+      });
+    }
+
+    if (this.mapreducerscriptneeded) {
+      this.composeWith("suiteapp:mapreduce", {
+        name: this.projectname,
+        type: "ts",
+        componentname: this.componentname,
+        scriptversion : this.scriptversion,
+        projectinitials: this.projectinitials,
+        suiteappfoldername : this.name
       });
     }
 
     if(this.ojetincluded === 'Yes') {
       this.composeWith("suiteapp:JET", {
         ojetversion : this.ojetversion,
-        ojetpath : this.name + "/JET"
+        ojetpath : this.projectname + "/JET"
       })
     }
   }
@@ -130,18 +192,18 @@ module.exports = class extends Generator {
     if(this.ojetincluded === 'Yes'){
       this.fs.copyTpl(
         this.templatePath("_package_with_ojet.json"),
-        this.destinationPath(this.name + "/package.json"),
+        this.destinationPath(this.projectname + "/package.json"),
         {
-          projectname: this.projectname,
+          projectname: this.name,
           author: this.autor,
           projectversion: this.projectversion
         }
       );
       this.fs.copyTpl(
         this.templatePath("_Gruntfile.js"),
-        this.destinationPath(this.name + "/Gruntfile.js"),
+        this.destinationPath(this.projectname + "/Gruntfile.js"),
         {
-          projectname: this.projectname,
+          projectname: this.name,
           author: this.autor,
           projectversion: this.projectversion
         }
@@ -151,9 +213,9 @@ module.exports = class extends Generator {
       if(!this.includesimplepackage){
         this.fs.copyTpl(
           this.templatePath("_package_with_karma.json"),
-          this.destinationPath(this.name + "/package.json"),
+          this.destinationPath(this.projectname + "/package.json"),
           {
-            projectname: this.projectname,
+            projectname: this.name,
             author: this.autor,
             projectversion: this.projectversion
           }
@@ -162,9 +224,9 @@ module.exports = class extends Generator {
       else{
         this.fs.copyTpl(
           this.templatePath("_package.json"),
-          this.destinationPath(this.name + "/package.json"),
+          this.destinationPath(this.projectname + "/package.json"),
           {
-            projectname: this.projectname,
+            projectname: this.name,
             author: this.autor,
             projectversion: this.projectversion
           }
@@ -175,60 +237,78 @@ module.exports = class extends Generator {
 
     this.fs.copyTpl(
       this.templatePath("_deploy.xml"),
-      this.destinationPath(this.name + "/deploy.xml"),
+      this.destinationPath(this.projectname + "/deploy.xml"),
       {
-        projectname: this.projectname
+        projectname: this.name
+      }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath("_manifest.xml"),
+      this.destinationPath(this.projectname + "/manifest.xml"),
+      {
+        projectname: this.projectname,
+        publisherid: this.publisherid,
+        projectid: this.projectid
+      }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath("_.project"),
+      this.destinationPath(this.projectname + "/.project"),
+      {
+        projectname: this.name
       }
     );
 
     this.fs.copyTpl(
       this.templatePath("_.eslintrc.js"),
-      this.destinationPath(this.name + "/.eslintrc.js")
+      this.destinationPath(this.projectname + "/.eslintrc.js")
     );
 
     this.fs.copyTpl(
       this.templatePath("_.prettierrc"),
-      this.destinationPath(this.name + "/.prettierrc")
+      this.destinationPath(this.projectname + "/.prettierrc")
     );
 
     this.fs.copyTpl(
       this.templatePath("_karma.conf.js"),
-      this.destinationPath(this.name + "/karma.conf.js"),
+      this.destinationPath(this.projectname + "/karma.conf.js"),
       {
-        projectname: this.projectname
+        projectname: this.name
       }
     );
 
     this.fs.copyTpl(
       this.templatePath("_wallaby.conf.js"),
-      this.destinationPath(this.name + "/wallaby.conf.js"),
+      this.destinationPath(this.projectname + "/wallaby.conf.js"),
       {
-        projectname: this.projectname
+        projectname: this.name
       }
     );
 
     this.fs.copyTpl(
       this.templatePath("_tsconfig.json"),
-      this.destinationPath(this.name + "/tsconfig.json"),
+      this.destinationPath(this.projectname + "/tsconfig.json"),
       {
-        projectname: this.projectname
+        projectname: this.name
       }
     );
 
     this.fs.copyTpl(
       this.templatePath("_tslint.json"),
-      this.destinationPath(this.name + "/tslint.json")
+      this.destinationPath(this.projectname + "/tslint.json")
     );
 
     if(this.ojetincluded=== 'Yes'){
-      var ojetPath = this.name + "/JET";
+      var ojetPath = this.projectname + "/JET";
       mkdirp.sync(ojetPath);
     }
 
-    mkdirp.sync(this.name + "/FileCabinet/SuiteApps");
-    mkdirp.sync(this.name + "/InstallationPreferences");
-    mkdirp.sync(this.name + "/Objects");
-    mkdirp.sync(this.name + "/Translations");    
+    mkdirp.sync(this.projectname + "/FileCabinet/SuiteApps");
+    mkdirp.sync(this.projectname + "/InstallationPreferences");
+    mkdirp.sync(this.projectname + "/Objects");
+    mkdirp.sync(this.projectname + "/Translations");    
   }
 
   // install() {

@@ -10,11 +10,12 @@
       "esnext",
       "dom"
     ],
-    "module": "es6",
+    "module": "amd",
     "moduleResolution": "node",
     "newLine": "LF",
     "noEmitOnError": true,
     "outDir": "FileCabinet/SuiteApps/<%= projectname %>/dist/compiled",
+    "rootDir" : "./ts/<%= projectname %>",
     "paths": {
       "N": [
         "node_modules/@hitc/netsuite-types/N"
@@ -33,6 +34,6 @@
     "test/**/*"
   ],
   "include": [
-    "src/**/*"
+    "ts/**/*"
   ]
 }

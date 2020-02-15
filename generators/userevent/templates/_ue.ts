@@ -1,22 +1,24 @@
 /**
+ *    Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ *
  * @NAPIVersion <%= scriptversion %>
  * @NScriptType UserEventScript
  * @NModulescope SameAccount
  */
 
-import {EntryPoints} from 'N/types'
-import * as log from 'N/log'
+import {EntryPoints} from 'N/types';
+import * as log from 'N/log';
 import { <%= usecasename %> } from '../usecase/<%= usecasename %>';
 import { <%= gatewayname %> } from '../gateway/<%= gatewayname %>';
 
-var useCase: <%= usecasename %>;
+let useCase: <%= usecasename %>;
 
 function getUseCase() {
 if (useCase === null) {
     useCase = new <%= usecasename %>({
         dependencies: {
-            OrderGuideCSPopUpGateway: _createGateway()
-        }
+            OrderGuideCSPopUpGateway: _createGateway(),
+    },
     });
 }
 return useCase;
@@ -24,15 +26,27 @@ return useCase;
 
 function _createGateway() {
 return new <%= gatewayname %>({
-    dependencies: {
-        
-    }        
+    dependencies: {},
 });
 }
 
-export function beforeSubmit(ctx: EntryPoints.UserEvent.beforeSubmitContext) {
+/**
+ * beforeSubmit
+ * @param ctx
+ */
+export const beforeSubmit: EntryPoints.UserEvent.beforeSubmit = (ctx: EntryPoints.UserEvent.beforeSubmitContext): void => {
+};
 
-    let x = ctx.newRecord.getValue({fieldId: 'companyname'})
+/**
+ * beforeSubmit
+ * @param ctx
+ */
+export const beforeLoad: EntryPoints.UserEvent.beforeLoad = (ctx: EntryPoints.UserEvent.beforeLoadContext): void => {
+};
 
-    log.audit('value', `companyname is: ${x}`)
-}
+/**
+ * beforeSubmit
+ * @param ctx
+ */
+export const afterSubmit: EntryPoints.UserEvent.afterSubmit = (ctx: EntryPoints.UserEvent.afterSubmitContext): void => {
+};
