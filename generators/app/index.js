@@ -18,72 +18,18 @@ module.exports = class extends Generator {
         `Welcome to the finest ${chalk.green("generator-suiteapp")} generator!`
       )
     );
-    const prompts = [
-      {
-        type: "input",
-        name: "publisherid",
-        message: "Enter publisher id?",
-        default: "com.netsuite"
-      },
+    const prompts = [      
       {
         type: "input",
         name: "projectid",
-        message: "Enter project id?",
+        message: "Enter bundle name?",
         default: "bundlename"
       },
       {
         type: "input",
         name: "projectname",
-        message: "Would you like to root name to be called?",
+        message: "Enter Project name?",
         default: "Sometestapplication"
-      },
-      // {
-      //   type: "input",
-      //   name: "projectinitials",
-      //   message: "Enter Project initials that will be prefixed with scripts?",
-      //   default: "LT"
-      // },
-      {
-        type: "input",
-        name: "projectversion",
-        message: "please input your project version?",
-        default: "1.0.0"
-      },
-      {
-        type: "input",
-        name: "author",
-        message: "please input author name?",
-        default: "SuiteApp Developer"
-      },
-      {
-        type: "input",
-        name: "clientscript",
-        message: "Do you want to include client script. Enter Y/N",
-        default: "Y"
-      },
-      {
-        type: "input",
-        name: "usereventscript",
-        message: "Do you want to include user event script. Enter Y/N",
-        default: "Y"
-      },
-      {
-        type: "input",
-        name: "suiteletscript",
-        message: "Do you want to include suitelet script. Enter Y/N",
-        default: "Y"
-      },
-      {
-        type: "input",
-        name: "mapreducerscript",
-        message: "Do you want to include map reducer script. Enter Y/N",
-        default: "Y"
-      },
-      {
-        type: "input",
-        name: "scriptversion",
-        message: "please provide script version to create suite apps?",
-        default: "2.x"
       },
       {
         type: "input",
@@ -104,34 +50,27 @@ module.exports = class extends Generator {
         message: "please input your ojet version?",
         default: "8.0.0",
         when: whenOJETIsChosen(['Yes'])
-      },
-      {
-        type: "input",
-        name: "simplepackage",
-        message: "use simple package json (Y/N)?",
-        when: whenOJETIsChosen(['no']),
-        default : 'Y'
-      },
+      }
     ];
 
     return this.prompt(prompts).then(props => {
       // To access props later use this.props.someAnswer;
       this.scripttype = props.scripttype;
-      this.name = props.publisherid + '.' + props.projectid;
+      this.name = "com.netsuite" + '.' + props.projectid;
       this.projectname = props.projectname;
       this.autor = props.author;
-      this.projectversion = props.projectversion;
+      this.projectversion = "1.0.0";
       this.ojetincluded = props.ojet,
       this.ojetversion = props['ojet:version'],
-      this.clientscriptneeded = props.clientscript === 'Y',
-      this.usereventscriptneeded = props.usereventscript === 'Y',
-      this.suiteletscriptneeded = props.suiteletscript === 'Y',
-      this.mapreducerscriptneeded = props.mapreducerscript === 'Y',
+      this.clientscriptneeded = true,
+      this.usereventscriptneeded = true,
+      this.suiteletscriptneeded = true,
+      this.mapreducerscriptneeded = true,
       this.componentname = props.componentname,
-      this.includesimplepackage = props.simplepackage === 'Y',
-      this.publisherid = props.publisherid,
+      this.includesimplepackage = false,
+      this.publisherid = "com.netsuite",
       this.projectid = props.projectid,
-      this.scriptversion = props.scriptversion
+      this.scriptversion = "2.x"
       //this.projectinitials = props.projectinitials
     });
   }
@@ -244,6 +183,14 @@ module.exports = class extends Generator {
     );
 
     this.fs.copyTpl(
+      this.templatePath("_.gitignore"),
+      this.destinationPath(this.projectname + "/deploy.xml"),
+      {
+        projectname: this.name
+      }
+    );
+
+    this.fs.copyTpl(
       this.templatePath("_manifest.xml"),
       this.destinationPath(this.projectname + "/manifest.xml"),
       {
@@ -277,15 +224,7 @@ module.exports = class extends Generator {
       {
         projectname: this.name
       }
-    );
-
-    this.fs.copyTpl(
-      this.templatePath("_wallaby.conf.js"),
-      this.destinationPath(this.projectname + "/wallaby.conf.js"),
-      {
-        projectname: this.name
-      }
-    );
+    );    
 
     this.fs.copyTpl(
       this.templatePath("_tsconfig.json"),

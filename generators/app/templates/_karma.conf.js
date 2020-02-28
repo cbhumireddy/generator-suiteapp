@@ -16,20 +16,7 @@
 // SuiteApp ID
 var appid = '<%= projectname %>';
 
-// default value to use: 'FileCabinet/SuiteApps/' + appid + '/src/**/*.js'
-// if there are certain folders to exclude and hard to find the correct pattern, just enumerate the items
-// to include here.
-var includeInCodeCoverage = [
-    'FileCabinet/SuiteApps/' + appid + '/src/**/!(lib)/*.js'
-];
-/** End of Configuration **/
-
-var preprocessors = {};
-includeInCodeCoverage.map(function (key) {
-    preprocessors[key] = ['coverage'];
-});
-
-module.exports = function (config) {
+module.exports = function(config) {
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
@@ -41,55 +28,54 @@ module.exports = function (config) {
         /** Start of Configuration **/
         // list of files / patterns to load in the browser
         files: [
-            'FileCabinet/SuiteApps/' + appid + '/test/jasmine/unit/vendor/require.js',
-            {pattern: 'FileCabinet/SuiteApps/' + appid + '/test/jasmine/unit/mock/**/*.js', included: false},
-            {pattern: 'FileCabinet/SuiteApps/' + appid + '/src/**/!(3rdparty)/*.js', included: false},
-            {pattern: 'FileCabinet/SuiteApps/' + appid + '/test/jasmine/unit/**/*Spec.js', included: false},
-            'FileCabinet/SuiteApps/' + appid + '/test/jasmine/unit/test-main.karma.js'
+            'FileCabinet/SuiteApps/' + appid + '/test/unit/jasmine/vendor/require.js',
+            {
+                pattern: 'FileCabinet/SuiteApps/' + appid + '/test/unit/jasmine/mock/**/*.js',
+                included: false
+            },
+            {pattern: 'FileCabinet/SuiteApps/' + appid + '/src/**/*.js', included: false},
+            {
+                pattern: 'FileCabinet/SuiteApps/' + appid + '/test/unit/jasmine/**/*Spec.js',
+                included: false
+            },
+            'FileCabinet/SuiteApps/' + appid + '/test/unit/jasmine/test-main.karma.js'
         ],
 
         // list of files to exclude
-        exclude: [
-            'FileCabinet/SuiteApps/' + appid + '/src/BundleInstaller/main/OG_BI_Setup.js'
-        ],
-
-        /** End of Configuration **/
+        exclude: [],
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        // (these files will be instrumented by Istanbul)
-        preprocessors: preprocessors,
+        preprocessors: {
+            // source files, that you wanna generate coverage for
+            // do not include tests or libraries
+            // (these files will be instrumented by Istanbul)
+            'FileCabinet/SuiteApps/<%= projectname %>;/src/**/*.js': ['coverage']
+        },
+        /** End of Configuration **/
 
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        plugins: [
-            'karma-jasmine',
-            'karma-requirejs',
-            'karma-chrome-launcher',
-            'karma-coverage',
-            'karma-spec-reporter',
-            'karma-teamcity-reporter'
-        ],
-        reporters: ['spec', 'coverage', 'progress'],
 
-        specReporter: {
-            maxLogLines: 5,         // limit number of lines logged per test
-            suppressErrorSummary: true,  // do not print error summary
-            suppressFailed: false,  // do not print information about failed tests
-            suppressPassed: false,  // do not print information about passed tests
-            suppressSkipped: true,  // do not print information about skipped tests
-            showSpecTiming: false // print the time elapsed for each spec
-        },
+        reporters: ['progress', 'coverage'],
 
         // optionally, configure the reporter
         coverageReporter: {
-            type: 'lcov',
+            type: 'html',
             subdir: 'html',
             includeAllSources: true,
             dir: 'coverage/'
         },
 
+        progressReporter: {
+            maxLogLines: 5, // limit number of lines logged per test
+            suppressErrorSummary: false, // do not print error summary
+            suppressFailed: false, // do not print information about failed tests
+            suppressPassed: false, // do not print information about passed tests
+            suppressSkipped: true, // do not print information about skipped tests
+            showSpecTiming: false // print the time elapsed for each spec
+        },
         // Optionally, configure the reporter
         // htmlDetailed : {
         //     dir : 'unit_test_report/',
@@ -111,7 +97,7 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['ChromeHeadlessNoSandbox', 'ChromeHeadless'],
+        browsers: ['ChromeHeadless'],
         customLaunchers: {
             ChromeHeadlessNoSandbox: {
                 base: 'ChromeHeadless',
@@ -121,10 +107,10 @@ module.exports = function (config) {
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false,
+        singleRun: true,
 
         // Concurrency level
         // how many browser should be started simultaneous
         concurrency: Infinity
-    })
+    });
 };
