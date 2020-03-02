@@ -31,12 +31,12 @@ module.exports = class extends Generator {
         message: "Enter Project name?",
         default: "Sometestapplication"
       },
-      {
-        type: "input",
-        name: "componentname",
-        message: "please provide component/use case?",
-        default: "SampleComponent"
-      },
+      // {
+      //   type: "input",
+      //   name: "componentname",
+      //   message: "please provide component/use case?",
+      //   default: "SampleComponent"
+      // },
       {
         type: "list",
         name: "ojet",
@@ -66,7 +66,7 @@ module.exports = class extends Generator {
       this.usereventscriptneeded = true,
       this.suiteletscriptneeded = true,
       this.mapreducerscriptneeded = true,
-      this.componentname = props.componentname,
+      this.componentname = "DeleteMe",//props.componentname,
       this.includesimplepackage = false,
       this.publisherid = "com.netsuite",
       this.projectid = props.projectid,
@@ -174,17 +174,17 @@ module.exports = class extends Generator {
       
     }    
 
-    this.fs.copyTpl(
-      this.templatePath("_deploy.xml"),
-      this.destinationPath(this.projectname + "/deploy.xml"),
-      {
-        projectname: this.name
-      }
-    );
+    // this.fs.copyTpl(
+    //   this.templatePath("_deploy.xml"),
+    //   this.destinationPath(this.projectname + "/deploy.xml"),
+    //   {
+    //     projectname: this.name
+    //   }
+    // );
 
     this.fs.copyTpl(
       this.templatePath("_.gitignore"),
-      this.destinationPath(this.projectname + "/deploy.xml"),
+      this.destinationPath(this.projectname + "/.gitignore"),
       {
         projectname: this.name
       }

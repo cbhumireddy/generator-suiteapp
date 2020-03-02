@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {    
     "build:dev": "tsc -w",
-    "clean": "rimraf FileCabinet",
+    "clean": "rimraf FileCabinet/SuiteApps/<%= projectname %>/dist/compiled",
     "test": "karma start  --browsers ChromeHeadless",
     "test-ci": "karma start --reporters teamcity,coverage --single-run --browsers ChromeHeadlessNoSandbox --colors false"
   },
