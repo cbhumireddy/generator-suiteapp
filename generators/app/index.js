@@ -327,21 +327,20 @@ module.exports = class extends Generator {
     if(this.error) return;    
    this.log(`${chalk.bold.yellow('Proceed with entering your netsuite credentials to setup account')}`);
 
-  //  this.spawnCommandSync('suitecloud',['setupaccount'],
-  //  {
-  //     cwd: this.name
-  //  });  
+   this.spawnCommandSync('suitecloud',['setupaccount'],
+   {
+      cwd: this.name
+   });  
 
    if(!this.options['skip-install']){
     this.log(`\n${chalk.bold.green('Running `npm install` to install dependencies\n')}`);
   
     this.spawnCommandSync('npm', ['install'], {
       cwd : utility.scriptsDestinationPath(this.name)
-    });
+    }); 
  
-    this.log(`\n${chalk.bold.green('Running `npm install` in JET to install dependencies\n')}`);
- 
-    if(this.options['ojet']){
+    if(this.options['ojet'] || this.includeOjet === 'Yes'){
+     this.log(`\n${chalk.bold.green('Running `npm install` in JET to install dependencies\n')}`);
      this.spawnCommandSync('npm', ['install'], {
        cwd : utility.scriptsDestinationPath(this.name) + 'JET'
      });
