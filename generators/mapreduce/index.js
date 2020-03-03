@@ -1,5 +1,6 @@
 "use strict";
 const Generator = require("yeoman-generator");
+const utility = require("./../generator-utility");
 
 const userEventScriptGenerator = class extends Generator {
     writing() {
@@ -24,14 +25,13 @@ const userEventScriptGenerator = class extends Generator {
             usecasename:
                 componentname === undefined ? "UEUsecase" : componentname + "UEUsecase"
         };
+        
+        const destinationPath = utility.scriptsDestinationPath(suiteappfoldername,componentname);
 
         this.fs.copyTpl(
             this.templatePath(`${templates.mapreducescript}`),
             this.destinationPath(
-                name +
-                "/ts/" +
-                suiteappfoldername+ "/" +
-                componentname +
+                destinationPath +
                 "/main/" +
                 templates.file_prefix +
                 "MR_" +

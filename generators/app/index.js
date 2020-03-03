@@ -10,16 +10,56 @@ const whenOJETIsChosen = authChoises => props => authChoises.indexOf(props['ojet
 
 module.exports = class extends Generator {
   constructor(args, opts) {
-    super(args, opts);    
+    super(args, opts);  
+    this.option('--ojet', {
+      desc: 'Indicates the command is run from JHipster CLI',
+      type: Boolean,
+      defaults: false
+  });
+
+    this.option("--i", {
+      description : 'Run generation in series so that questions can be interacted with',
+      default : false
+    });
+
+    this.option("--skip-install", {
+      description : 'Do not automatically install dependencies',
+      default : false
+    });
+
+    try{
+      // This makes `projectname` a required argument.
+       this.argument("projectname", { type: String, required: !this.options['i'] });
+
+       // This makes `projectname` a required argument.
+        this.argument("projectid", { type: String, required: !this.options['i'] });       
+
+    } catch(ex){
+      this.log(ex.message);
+      this.error = true;
+    }
+    
   }
 
-  initializing() {}
+  initializing() {
+  //   this.prepareDefaults();
+  //   this.spawnCommandSync('suitecloud',['createproject', 
+  //   '--type=' +constants.PROJECT_TYPE,
+  //   '--projectname=' +  this.projectname,
+  //   '--publisherid=' + constants.PUBLISHER_ID,
+  //   '--projectid='  + this.projectid,
+  //   '--projectversion=' + constants.PROJECT_VERSION
+  //  ],
+  //  {
+  //    // cwd: this.projectname
+  //  });
+  }
 
   configuring() {}
 
   prompting() {
-
-    if(this.args.length > 0) {
+    if(this.error) return;
+    if(!this.options['i'] && this.args.length > 0) {
       this.log('going');
       return;
     }
@@ -33,19 +73,17 @@ module.exports = class extends Generator {
       {
         type: "input",
         name: "projectid",
-        message: "Enter project id?",
-        default: "bundlename"
+        message: "Enter the project ID."
       },
       {
         type: "input",
         name: "projectname",
-        message: "Enter Project name?",
-        default: "Sometestapplication"
+        message: "Enter the project name."
       },      
       {
         type: "list",
         name: "ojet",
-        message: "Does this project include OJET as well?",
+        message: "Does this project include OJET as well.",
         default: "no",
         choices: ["Yes", "no"]
       },
@@ -80,8 +118,19 @@ module.exports = class extends Generator {
     });
   }
 
-  default() {       
+  default() {
+    if(this.error) return;
     this.prepareDefaults();
+    this.spawnCommandSync('suitecloud',['createproject', 
+    '--type=' +constants.PROJECT_TYPE,
+    '--projectname=' +  this.projectname,
+    '--publisherid=' + constants.PUBLISHER_ID,
+    '--projectid='  + this.projectid,
+    '--projectversion=' + constants.PROJECT_VERSION
+   ],
+   {
+     // cwd: this.projectname
+   });
      if(this.name === undefined){
       this.log(
         `${chalk.red("There are validation errors: \r\n'projectid' is mandatory \r\n")}!`
@@ -142,35 +191,43 @@ module.exports = class extends Generator {
     if(this.ojetincluded === 'Yes') {
       this.composeWith("suiteapp:JET", {
         ojetversion : this.ojetversion,
-        ojetpath : this.projectname + "/JET"
+        ojetpath : utility.scriptsDestinationPath(this.name) + "/JET"
       })
     }
   }
 
   prepareDefaults() {
-    this.projectname = utility.extractProperty(this.args[0]) || this.projectname;
+    this.projectname = utility.extractProperty(this.options['projectname']) || this.projectname;
     this.componentname = this.componentname || constants.DUMMY_COMPONENT;
     this.scriptversion = this.scriptversion || constants.SUITE_SCRIPT_VERSION;
-    const projectIdFromArgs = utility.extractProperty(this.args[1]);
+    const projectIdFromArgs = utility.extractProperty(this.options['projectid']);
     const bundlename = projectIdFromArgs ? constants.PUBLISHER_ID + '.' + projectIdFromArgs : undefined;
     this.name = this.args.length > 0 ? bundlename : this.name;
     if(this.args.length > 1){
       this.projectid = projectIdFromArgs;
     }
-    this.scriptversion = utility.extractProperty(this.args[2]) || this.projectversion;
+    const includeOjet = this.options['ojet'];
+    if(includeOjet){
+      this.ojetincluded = 'Yes'
+    }
+    if(!this.ojetversion){
+        this.ojetversion = '8.0.0';
+    }
+    this.scriptversion = utility.extractProperty(this.args[3]) || this.projectversion;
     if(this.scriptversion === undefined){
       this.scriptversion = '2.x';
     }
   }
   
   writing() {
+    if(this.error) return;
     if(this.name === undefined){
       return;
     }
     if(this.ojetincluded === 'Yes'){
       this.fs.copyTpl(
         this.templatePath("_package_with_ojet.json"),
-        this.destinationPath(this.projectname + "/package.json"),
+        this.destinationPath(utility.scriptsDestinationPath(this.name) + "/package.json"),
         {
           projectname: this.name,
           author: this.autor,
@@ -179,7 +236,7 @@ module.exports = class extends Generator {
       );
       this.fs.copyTpl(
         this.templatePath("_Gruntfile.js"),
-        this.destinationPath(this.projectname + "/Gruntfile.js"),
+        this.destinationPath(utility.scriptsDestinationPath(this.name) + "/Gruntfile.js"),
         {
           projectname: this.name,
           author: this.autor,
@@ -191,7 +248,7 @@ module.exports = class extends Generator {
       if(!this.includesimplepackage){
         this.fs.copyTpl(
           this.templatePath("_package_with_karma.json"),
-          this.destinationPath(this.projectname + "/package.json"),
+          this.destinationPath(utility.scriptsDestinationPath(this.name) + "/package.json"),
           {
             projectname: this.name,
             author: this.autor,
@@ -202,7 +259,7 @@ module.exports = class extends Generator {
       else{
         this.fs.copyTpl(
           this.templatePath("_package.json"),
-          this.destinationPath(this.projectname + "/package.json"),
+          this.destinationPath(utility.scriptsDestinationPath(this.name) + "/package.json"),
           {
             projectname: this.name,
             author: this.autor,
@@ -215,25 +272,15 @@ module.exports = class extends Generator {
 
     this.fs.copyTpl(
       this.templatePath("_.gitignore"),
-      this.destinationPath(this.projectname + "/.gitignore"),
+      this.destinationPath(utility.scriptsDestinationPath(this.name) + "/.gitignore"),
       {
         projectname: this.name
       }
-    );
-
-    this.fs.copyTpl(
-      this.templatePath("_manifest.xml"),
-      this.destinationPath(this.projectname + "/manifest.xml"),
-      {
-        projectname: this.projectname,
-        publisherid: this.publisherid,
-        projectid: this.projectid
-      }
-    );
+    );   
 
     this.fs.copyTpl(
       this.templatePath("_.project"),
-      this.destinationPath(this.projectname + "/.project"),
+      this.destinationPath(utility.scriptsDestinationPath(this.name) + "/.project"),
       {
         projectname: this.name
       }
@@ -241,17 +288,17 @@ module.exports = class extends Generator {
 
     this.fs.copyTpl(
       this.templatePath("_.eslintrc.js"),
-      this.destinationPath(this.projectname + "/.eslintrc.js")
+      this.destinationPath(utility.scriptsDestinationPath(this.name) + "/.eslintrc.js")
     );
 
     this.fs.copyTpl(
       this.templatePath("_.prettierrc"),
-      this.destinationPath(this.projectname + "/.prettierrc")
+      this.destinationPath(utility.scriptsDestinationPath(this.name) + "/.prettierrc")
     );
 
     this.fs.copyTpl(
       this.templatePath("_karma.conf.js"),
-      this.destinationPath(this.projectname + "/karma.conf.js"),
+      this.destinationPath(utility.scriptsDestinationPath(this.name) + "/karma.conf.js"),
       {
         projectname: this.name
       }
@@ -259,7 +306,7 @@ module.exports = class extends Generator {
 
     this.fs.copyTpl(
       this.templatePath("_tsconfig.json"),
-      this.destinationPath(this.projectname + "/tsconfig.json"),
+      this.destinationPath(utility.scriptsDestinationPath(this.name) + "/tsconfig.json"),
       {
         projectname: this.name
       }
@@ -267,50 +314,38 @@ module.exports = class extends Generator {
 
     this.fs.copyTpl(
       this.templatePath("_tslint.json"),
-      this.destinationPath(this.projectname + "/tslint.json")
+      this.destinationPath(utility.scriptsDestinationPath(this.name) + "/tslint.json")
     );
 
     if(this.ojetincluded=== 'Yes'){
-      var ojetPath = this.projectname + "/JET";
+      var ojetPath = utility.scriptsDestinationPath(this.name) + "/JET";
       mkdirp.sync(ojetPath);
-    }
-
-    //mkdirp.sync(this.projectname + "/FileCabinet/SuiteApps");
-    //mkdirp.sync(this.projectname + "/InstallationPreferences");
-    //mkdirp.sync(this.projectname + "/Objects");
-    //mkdirp.sync(this.projectname + "/Translations");    
+    }       
   }
 
-  // install() {
-  //   this.log(`\n${chalk.bold.green('Running `npm install` to install dependencies\n')}`);
-  //   // this.installDependencies();
-  //   this.spawnCommandSync('npm', ['install'], {
-  //     cwd : this.projectname
-  //   });
-  // }
-
   end() {
-    this.spawnCommandSync('suitecloud',['createproject', 
-    '--type=' +constants.PROJECT_TYPE,
-    '--projectname=' +  this.projectname,
-    '--publisherid=' + constants.PUBLISHER_ID,
-    '--projectid='  + this.projectid,
-    '--projectversion=' + constants.PROJECT_VERSION
-   ],
-   {
-     cwd: this.projectname
-   });
+    if(this.error) return;    
    this.log(`${chalk.bold.yellow('Proceed with entering your netsuite credentials to setup account')}`);
 
-   this.spawnCommandSync('suitecloud',['setupaccount'],
-   {
-     cwd: this.projectname
-   });  
+  //  this.spawnCommandSync('suitecloud',['setupaccount'],
+  //  {
+  //     cwd: this.name
+  //  });  
 
-   this.log(`\n${chalk.bold.green('Running `npm install` to install dependencies\n')}`);
+   if(!this.options['skip-install']){
+    this.log(`\n${chalk.bold.green('Running `npm install` to install dependencies\n')}`);
   
-   this.spawnCommandSync('npm', ['install'], {
-     cwd : this.projectname
-   }); 
+    this.spawnCommandSync('npm', ['install'], {
+      cwd : utility.scriptsDestinationPath(this.name)
+    });
+ 
+    this.log(`\n${chalk.bold.green('Running `npm install` in JET to install dependencies\n')}`);
+ 
+    if(this.options['ojet']){
+     this.spawnCommandSync('npm', ['install'], {
+       cwd : utility.scriptsDestinationPath(this.name) + 'JET'
+     });
+    }
+   }   
   }
 };

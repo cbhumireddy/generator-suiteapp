@@ -15,7 +15,7 @@
     "newLine": "LF",
     "noEmitOnError": true,
     "outDir": "FileCabinet/SuiteApps/<%= projectname %>/dist/compiled",
-    "rootDir" : "./ts/<%= projectname %>",
+    "rootDir" : "./ts",
     "paths": {
       "N": [
         "node_modules/@hitc/netsuite-types/N"
