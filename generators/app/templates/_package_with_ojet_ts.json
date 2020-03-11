@@ -3,12 +3,15 @@
   "version": "<%= projectversion %>",
   "description": "",
   "scripts": {    
+    "build:dev": "tsc -w",
+    "clean": "rimraf FileCabinet/SuiteApps/<%= projectname %>/dist/compiled",
     "test": "karma start  --browsers ChromeHeadless",
     "test-ci": "karma start --reporters teamcity,coverage --single-run --browsers ChromeHeadlessNoSandbox --colors false"
   },
   "author": "<%= author %>",
   "license": "ISC",
-  "devDependencies": {    
+  "devDependencies": {
+    "@hitc/netsuite-types": "^2019.2.5",
     "grunt": "1.0.4",
     "grunt-contrib-clean": "2.0.0",
     "grunt-contrib-copy": "^1.0.0",
@@ -31,6 +34,9 @@
     "karma-webpack": "2.0.3",
     "requirejs": "2.3.6",
     "webpack": "2.3.3",
-    "webpack-dev-server": "2.4.2"
+    "webpack-dev-server": "2.4.2",
+    "rimraf": "^2.6.3",
+    "tslint": "5.18.0",
+    "typescript": "^3.7.2"
   }
 }
