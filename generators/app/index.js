@@ -66,18 +66,19 @@ module.exports = class extends Generator {
       this.projectname = props.projectname;
       this.autor = props.author;
       this.projectversion = constants.PROJECT_VERSION;
-      (this.ojetincluded = props.ojet),
-        (this.ojetversion = props["ojet:version"]),
-        (this.clientscriptneeded = true),
-        (this.usereventscriptneeded = true),
-        (this.suiteletscriptneeded = true),
-        (this.mapreducerscriptneeded = true),
-        (this.componentname = constants.DUMMY_COMPONENT), //props.componentname,
-        (this.includesimplepackage = false),
-        (this.publisherid = constants.PUBLISHER_ID),
-        (this.projectid = props.projectid),
-        (this.scriptversion = constants.SUITE_SCRIPT_VERSION),
-        (this.tsApplication = props.isTypeScriptApplication === "Yes");
+      this.ojetincluded = props.ojet;
+      this.clientscriptneeded = true;
+      this.usereventscriptneeded = true;
+      this.suiteletscriptneeded = true;
+      this.mapreducerscriptneeded = true;
+      this.componentname = constants.DUMMY_COMPONENT; //props.componentname,
+      this.includesimplepackage = false;
+      this.publisherid = constants.PUBLISHER_ID;
+      this.projectid = props.projectid;
+      this.scriptversion = constants.SUITE_SCRIPT_VERSION;
+      this.tsApplication = props.isTypeScriptApplication === "Yes";
+      this.ojetversion = props["ojet:version"];
+      //this.log('cc', JSON.stringify(props))
       //this.projectinitials = props.projectinitials
     });
   }
@@ -88,7 +89,7 @@ module.exports = class extends Generator {
     this.spawnCommandSync(
       "suitecloud",
       [
-        "createproject",
+        "project:create",
         "--type=" + constants.PROJECT_TYPE,
         "--projectname=" + this.projectname,
         "--publisherid=" + constants.PUBLISHER_ID,
@@ -185,7 +186,7 @@ module.exports = class extends Generator {
       this.scriptversion = "2.x";
     }
     this.isTypeScriptApplication =
-      this.options["ts"] || this.tsApplication === "Yes";
+      this.options["ts"] || this.tsApplication;
   }
 
   writing() {
@@ -351,11 +352,11 @@ module.exports = class extends Generator {
       )}`
     );
 
-    this.spawnCommandSync("suitecloud", ["setupaccount"], {
+    this.spawnCommandSync("suitecloud", ["account:setup"], {
       cwd: this.name
     });
 
-    this.log("install", this.options["install"]);
+    // this.log("install", this.options["install"]);
 
     if (this.options["install"]) {
       this.log(
