@@ -9,36 +9,36 @@ const prompts = require("./../generator-prompts");
 module.exports = class extends Generator {
   constructor(args, opts) {
     super(args, opts);
-    this.option("--ojet", {
+    this.option("ojet", {
       desc: "Indicates that this project includes JET folder structure",
       type: Boolean,
       defaults: false
     });
 
-    this.option("--i", {
+    this.option("i", {
       description:
         "Run generation in series so that questions can be interacted with",
       default: false
     });
 
-    this.option("--ts", {
+    this.option("ts", {
       description:
         "generates suiteapp with typescript adaption. Default is false which generates js suiteapp",
       default: false
     });
 
-    this.option("--install", {
+    this.option("install", {
       description: "Do not automatically install dependencies",
       default: false
     });
 
     try {
+      
       // This makes `projectname` a required argument.
       this.argument("projectname", {
         type: String,
         required: !this.options["i"]
       });
-
       // This makes `projectid` a required argument.
       this.argument("projectid", {
         type: String,
@@ -51,7 +51,8 @@ module.exports = class extends Generator {
     }
   }
 
-  initializing() {}
+  initializing() {
+  }
 
   configuring() {}
 
@@ -81,6 +82,35 @@ module.exports = class extends Generator {
       //this.log('cc', JSON.stringify(props))
       //this.projectinitials = props.projectinitials
     });
+  }
+
+  writing() {
+    if (this.error) return;
+    if (this.name === undefined) {
+      return;
+    }
+    if (this.ojetincluded === "Yes") {
+      this.copyOjetConfiguration();
+    } else {
+      if (!this.includesimplepackage) {
+        this.copypackageconfig();
+      }
+    }
+
+    this.copygitignore();
+
+    this.copyprojecttemplate();
+
+    this.copyeslintconfig();
+
+    this.copyprettier();
+
+    // TODO : Need to prepare seperate karma conf for type script
+    this.copykarmaconfig();
+
+    this.copytypescriptconfig();
+
+    this.prepareJet();
   }
 
   default() {
@@ -118,6 +148,44 @@ module.exports = class extends Generator {
         ojetversion: this.ojetversion,
         ojetpath: utility.scriptsDestinationPath(this.name) + "/JET"
       });
+    }
+  }
+
+  end() {
+    if (this.error) return;
+    this.log(
+      `${chalk.bold.yellow(
+        "Proceed with entering your netsuite credentials to setup account"
+      )}`
+    );
+
+    this.spawnCommandSync("suitecloud", ["account:setup"], {
+      cwd: this.name
+    });
+
+    // this.log("install", this.options["install"]);
+
+    if (this.options["install"]) {
+      this.log(
+        `\n${chalk.bold.green(
+          "Running `npm install` to install dependencies\n"
+        )}`
+      );
+
+      this.spawnCommandSync("npm", ["install"], {
+        cwd: utility.scriptsDestinationPath(this.name)
+      });
+
+      if (this.options["ojet"] || this.ojetincluded === "Yes") {
+        this.log(
+          `\n${chalk.bold.green(
+            "Running `npm install` in JET to install dependencies\n"
+          )}`
+        );
+        this.spawnCommandSync("npm", ["install"], {
+          cwd: utility.scriptsDestinationPath(this.name) + "JET"
+        });
+      }
     }
   }
 
@@ -187,38 +255,10 @@ module.exports = class extends Generator {
     }
     this.isTypeScriptApplication =
       this.options["ts"] || this.tsApplication;
-  }
-
-  writing() {
-    if (this.error) return;
-    if (this.name === undefined) {
-      return;
-    }
-    if (this.ojetincluded === "Yes") {
-      this.copyOjetConfiguration();
-    } else {
-      if (!this.includesimplepackage) {
-        this.copypackageconfig();
-      }
-    }
-
-    this.copygitignore();
-
-    this.copyprojecttemplate();
-
-    this.copyeslintconfig();
-
-    this.copyprettier();
-
-    // TODO : Need to prepare seperate karma conf for type script
-    this.copykarmaconfig();
-
-    this.copytypescriptconfig();
-
-    this.prepareJet();
-  }
+  }  
 
   copypackageconfig() {
+    if(this.error) return;
     const template = this.isTypeScriptApplication
       ? "_package_with_karma_ts.json"
       : "_package_with_karma.json";
@@ -236,6 +276,8 @@ module.exports = class extends Generator {
   }
 
   copyOjetConfiguration() {
+    if(this.error) return;
+    if(this.ojetincluded !== "Yes") return;
     const template = this.isTypeScriptApplication
       ? "_package_with_ojet_ts.json"
       : "_package_with_ojet.json";
@@ -291,6 +333,7 @@ module.exports = class extends Generator {
   }
 
   copykarmaconfig() {
+    if(this.error) return;
     this.fs.copyTpl(
       this.templatePath("_karma.conf.js"),
       this.destinationPath(
@@ -303,6 +346,7 @@ module.exports = class extends Generator {
   }
 
   copyprettier() {
+    if(this.error) return;
     this.fs.copyTpl(
       this.templatePath("_.prettierrc"),
       this.destinationPath(
@@ -312,6 +356,7 @@ module.exports = class extends Generator {
   }
 
   copyeslintconfig() {
+    if(this.error) return;
     this.fs.copyTpl(
       this.templatePath("_.eslintrc.js"),
       this.destinationPath(
@@ -321,6 +366,7 @@ module.exports = class extends Generator {
   }
 
   copyprojecttemplate() {
+    if(this.error) return;
     this.fs.copyTpl(
       this.templatePath("_.project"),
       this.destinationPath(
@@ -333,6 +379,7 @@ module.exports = class extends Generator {
   }
 
   copygitignore() {
+    if(this.error) return;
     this.fs.copyTpl(
       this.templatePath("_.gitignore"),
       this.destinationPath(
@@ -342,43 +389,5 @@ module.exports = class extends Generator {
         projectname: this.name
       }
     );
-  }
-
-  end() {
-    if (this.error) return;
-    this.log(
-      `${chalk.bold.yellow(
-        "Proceed with entering your netsuite credentials to setup account"
-      )}`
-    );
-
-    this.spawnCommandSync("suitecloud", ["account:setup"], {
-      cwd: this.name
-    });
-
-    // this.log("install", this.options["install"]);
-
-    if (this.options["install"]) {
-      this.log(
-        `\n${chalk.bold.green(
-          "Running `npm install` to install dependencies\n"
-        )}`
-      );
-
-      this.spawnCommandSync("npm", ["install"], {
-        cwd: utility.scriptsDestinationPath(this.name)
-      });
-
-      if (this.options["ojet"] || this.ojetincluded === "Yes") {
-        this.log(
-          `\n${chalk.bold.green(
-            "Running `npm install` in JET to install dependencies\n"
-          )}`
-        );
-        this.spawnCommandSync("npm", ["install"], {
-          cwd: utility.scriptsDestinationPath(this.name) + "JET"
-        });
-      }
-    }
-  }
+  }  
 };

@@ -5,7 +5,7 @@
 'use strict';
 
 // START: CONFIGURATION
-var sourceDir = 'FileCabinet/SuiteApps/com.netsuite.routedelivery/src/';
+var sourceDir = 'FileCabinet/SuiteApps/<%= projectname %>/src/';
 var availableViews = {
     'jet/Splitview': {
         destination: sourceDir + 'ShipmentRecord/ui/view/'
