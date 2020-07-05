@@ -33,7 +33,7 @@ return new <%= gatewayname %>({
  * @param ctx
  */
 export const pageInit: EntryPoints.Client.pageInit = (ctx: EntryPoints.Client.pageInitContext): void => {
-
+    alert('hi');
 };
 
 /**

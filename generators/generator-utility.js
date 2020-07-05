@@ -3,8 +3,8 @@ function extractProperty(input) {
 }
 
 function scriptsDestinationPath(suiteappfoldername, componentname){
-    return  componentname ? suiteappfoldername + '/src/ts/'+ componentname :
-                            suiteappfoldername + '/src/';
+    return  componentname ? suiteappfoldername + '/src/FileCabinet/SuiteApps/'+ suiteappfoldername+"/" + componentname :
+                            suiteappfoldername ;
 }
 module.exports = {
     extractProperty : extractProperty,

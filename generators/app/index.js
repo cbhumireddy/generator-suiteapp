@@ -21,11 +21,11 @@ module.exports = class extends Generator {
       default: false
     });
 
-    this.option("ts", {
-      description:
-        "generates suiteapp with typescript adaption. Default is false which generates js suiteapp",
-      default: false
-    });
+    // this.option("ts", {
+    //   description:
+    //     "generates suiteapp with typescript adaption. Default is false which generates js suiteapp",
+    //   default: true
+    // });
 
     this.option("install", {
       description: "Do not automatically install dependencies",
@@ -68,6 +68,7 @@ module.exports = class extends Generator {
       this.autor = props.author;
       this.projectversion = constants.PROJECT_VERSION;
       this.ojetincluded = props.ojet;
+      this.installNpmPackages = props.installDependencies === "Yes"
       this.clientscriptneeded = true;
       this.usereventscriptneeded = true;
       this.suiteletscriptneeded = true;
@@ -77,10 +78,9 @@ module.exports = class extends Generator {
       this.publisherid = constants.PUBLISHER_ID;
       this.projectid = props.projectid;
       this.scriptversion = constants.SUITE_SCRIPT_VERSION;
-      this.tsApplication = props.isTypeScriptApplication === "Yes";
+      this.tsApplication = true;//props.isTypeScriptApplication === "Yes";
       this.ojetversion = props["ojet:version"];
       //this.log('cc', JSON.stringify(props))
-      //this.projectinitials = props.projectinitials
     });
   }
 
@@ -111,7 +111,13 @@ module.exports = class extends Generator {
     this.copytypescriptconfig();
 
     this.prepareJet();
-  }
+
+    // this.copySonarQube();
+
+    this.copygulpfile();
+
+    this.updateSuiteCloudConfig();
+  }  
 
   default() {
     if (this.error) return;
@@ -149,23 +155,21 @@ module.exports = class extends Generator {
         ojetpath: utility.scriptsDestinationPath(this.name) + "/JET"
       });
     }
+    
+    this.composeWith("suiteapp:test", {
+      name: this.projectname,
+      testPath: utility.scriptsDestinationPath(this.name) + "/test"
+    });
+
+    this.prepareTestProject();
   }
 
   end() {
-    if (this.error) return;
-    this.log(
-      `${chalk.bold.yellow(
-        "Proceed with entering your netsuite credentials to setup account"
-      )}`
-    );
-
-    this.spawnCommandSync("suitecloud", ["account:setup"], {
-      cwd: this.name
-    });
+    if (this.error) return;       
 
     // this.log("install", this.options["install"]);
 
-    if (this.options["install"]) {
+    if (this.options["install"] || this.installNpmPackages) {
       this.log(
         `\n${chalk.bold.green(
           "Running `npm install` to install dependencies\n"
@@ -183,14 +187,24 @@ module.exports = class extends Generator {
           )}`
         );
         this.spawnCommandSync("npm", ["install"], {
-          cwd: utility.scriptsDestinationPath(this.name) + "JET"
+          cwd: utility.scriptsDestinationPath(this.name) + "/JET"
         });
       }
     }
+
+    this.log(
+      `${chalk.bold.yellow(
+        "Proceed with entering your netsuite credentials to setup account"
+      )}`
+    );
+
+    this.spawnCommandSync("suitecloud", ["account:setup"], {
+      cwd: this.name
+    });
   }
 
   generateTypeScriptTemplates() {
-    if (this.isTypeScriptApplication || this.tsApplication) {
+    if (this.isTypeScriptApplication || this.tsApplication) {     
       this.composeWith("suiteapp:client", {
         name: this.projectname,
         type: "ts",
@@ -249,12 +263,12 @@ module.exports = class extends Generator {
       this.ojetversion = "8.0.0";
     }
     this.scriptversion =
-      utility.extractProperty(this.args[3]) || this.projectversion;
+      utility.extractProperty(this.args[3]) || this.scriptversion;
     if (this.scriptversion === undefined) {
       this.scriptversion = "2.x";
     }
-    this.isTypeScriptApplication =
-      this.options["ts"] || this.tsApplication;
+    this.isTypeScriptApplication = true;
+      //this.options["ts"] || this.tsApplication;
   }  
 
   copypackageconfig() {
@@ -305,11 +319,30 @@ module.exports = class extends Generator {
     );
   }
 
+  prepareTestProject(){
+    // var ojetPath = utility.scriptsDestinationPath(this.name) + "/JET";
+    // mkdirp.sync(ojetPath);
+    var testsPath = utility.scriptsDestinationPath(this.name) + "/test";   
+    mkdirp.sync(testsPath);
+  }
   prepareJet() {
     if (this.ojetincluded === "Yes") {
       var ojetPath = utility.scriptsDestinationPath(this.name) + "/JET";
       mkdirp.sync(ojetPath);
     }
+  }  
+
+  copySonarQube(){
+    if(this.error) return;
+    this.fs.copyTpl(
+      this.templatePath("_sonar-project.properties"),
+      this.destinationPath(
+        utility.scriptsDestinationPath(this.name) + "/src/FileCabinet/SuiteApps/"+ this.name+ ".sonar-project.properties"
+      ),
+      {
+        projectname: this.name
+      }
+    );
   }
 
   copytypescriptconfig() {
@@ -388,6 +421,32 @@ module.exports = class extends Generator {
       {
         projectname: this.name
       }
+    );
+  }
+  
+  updateSuiteCloudConfig(){
+    if(this.error) return;
+    this.fs.copyTpl(
+      this.templatePath("_suitecloud.config.js"),
+      this.destinationPath(
+        utility.scriptsDestinationPath(this.name) + "/suitecloud.config.js"
+      ),
+      {
+        projectname: this.name
+      }
+    );
+  }
+
+  copygulpfile(){
+    if(this.error) return;
+    this.fs.copyTpl(
+      this.templatePath("_gulpfile.js"),
+      this.destinationPath(
+        utility.scriptsDestinationPath(this.name) + "/gulpfile.js"
+      ),
+      {
+        projectname: this.name
+      },
     );
   }  
 };

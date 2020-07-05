@@ -4,9 +4,14 @@
   "description": "",
   "scripts": {    
     "build:dev": "tsc -w",
-    "clean": "rimraf FileCabinet/SuiteApps/<%= projectname %>/dist/compiled",
+    "clean": "rimraf dist/",
     "test": "karma start  --browsers ChromeHeadless",
-    "test-ci": "karma start --reporters teamcity,coverage --single-run --browsers ChromeHeadlessNoSandbox --colors false"
+    "test-ci": "karma start --reporters teamcity,coverage --single-run --browsers ChromeHeadlessNoSandbox --colors false",
+    "add-dependencies": "suitecloud project:adddependencies",
+    "validate": "npm run add-dependencies & suitecloud project:validate",
+    "deploy": "suitecloud project:deploy",
+    "add-account": "suitecloud account:setup",
+    "add-proxy": "suitecloud config:proxy"
   },
   "author": "<%= author %>",
   "license": "ISC",
@@ -37,6 +42,9 @@
     "webpack-dev-server": "2.4.2",
     "rimraf": "^2.6.3",
     "tslint": "5.18.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.2",
+    "gulp": "^4.0.0",
+    "gulp-typescript": "^5.0.1",
+    "del": "^4.0.0"
   }
 }

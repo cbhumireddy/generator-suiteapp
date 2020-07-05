@@ -11,13 +11,13 @@ const prompts = [
       name: "projectname",
       message: "Enter the project name."
     }, 
-    {
-        type: "list",
-        name: "isTypeScriptApplication",
-        message: "generate suiteapp using typescript.",
-        default: "no",
-        choices: ["Yes", "no"]
-      },     
+    // {
+    //     type: "list",
+    //     name: "isTypeScriptApplication",
+    //     message: "generate suiteapp using typescript.",
+    //     default: "no",
+    //     choices: ["Yes", "no"]
+    //   },     
     {
       type: "list",
       name: "ojet",
@@ -31,7 +31,14 @@ const prompts = [
       message: "please input your ojet version?",
       default: "8.0.0",
       when: whenOJETIsChosen(['Yes'])
-    }
+    },
+    {
+      type: "list",
+      name: "installDependencies",
+      message: "Do you want to install dependencies?",
+      default: "no",
+      choices: ["Yes", "no"]
+    },
   ];
 
   module.exports = prompts;
